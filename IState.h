@@ -8,22 +8,27 @@
 
 #include "ISubject.h"
 
-class Context;
+class AppenderCmd;
 
+/// Базовый класс состояния
 class IState
 {
 public:
     IState( ISubject* subject );
     virtual ~IState() = default;
-    virtual void AppendCmd( Context* context, const std::string& cmd ) = 0;
+    virtual void AppendCmd( AppenderCmd* context, const std::string& cmd ) = 0;
 protected:
-    void ChangeState( Context* context, IState* next_state );
+    void ChangeState( AppenderCmd* context, IState* next_state );
     void AppendCmdToSubject( const std::string& cmd );
 
     ISubject* m_subject = nullptr;
 };
 
-class Context
+/// Класс для добавления комманд.
+/// Может быть в двух состояниях:
+/// 1 - накапливать N команд, после отсылать.
+/// 2 - накапливать блок команд между символами {}.
+class AppenderCmd
 {
     friend class IState;
 public:
@@ -33,9 +38,9 @@ public:
         STATE_WAIT_END_BLOCK = 1
     };
 
-    Context( ISubject* subject, size_t N );
-    Context( const Context& ) = delete;
-    Context& operator = ( const Context& ) = delete;
+    AppenderCmd( ISubject* subject, size_t N );
+    AppenderCmd( const AppenderCmd& ) = delete;
+    AppenderCmd& operator = ( const AppenderCmd& ) = delete;
 
     void AppendCmd( const std::string& cmd );
     void ChangeState( IState* next_state );
@@ -45,15 +50,15 @@ private:
     IState* m_state = nullptr;
 };
 
-/// Состояние с блоками комманд
+/// Состояние с блоками {} команд
 class StateWaitEndBlock : public IState
 {
 public:
     StateWaitEndBlock( ISubject* subject );
-    void AppendCmd( Context* context, const std::string& cmd ) override;
+    void AppendCmd( AppenderCmd* context, const std::string& cmd ) override;
 private:
     void Uplvl();
-    void Downlvl( Context* context );
+    void Downlvl( AppenderCmd* context );
     void CopyCmd( const std::string& cmd );
 
     int32_t m_lvl = 1;
@@ -66,7 +71,7 @@ class StateWaitNCmd : public IState
 public:
     StateWaitNCmd( ISubject* subject, size_t N );
     ~StateWaitNCmd();
-    void AppendCmd( Context* conext, const std::string& cmd ) override;
+    void AppendCmd( AppenderCmd* conext, const std::string& cmd ) override;
 private:
     void Flush();
 

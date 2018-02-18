@@ -47,21 +47,24 @@ public:
         std::string cmd;
         while( true )
         {
-            std::cin >> cmd;
+            std::getline( std::cin, cmd );
             if( cmd.empty() )
                 return;
             m_context.AppendCmd( cmd );
         }
     }
 private:
-    Context m_context;
+    AppenderCmd m_context;
 };
 
 
 int main( int ac, char* av[] )
 {
     if( ac != 2 )
+    {
+        std::cout << "Not set size block command!\n";
         return 1;
+    }
     int32_t N = std::atoi(av[1]);
 
     ConsoleObserver co;
