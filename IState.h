@@ -41,7 +41,6 @@ public:
 private:
     std::vector< std::unique_ptr<IState> > m_states;
     IState* m_state = nullptr;
-    ISubject* m_subject = nullptr;
 };
 
 /// Состояние с блоками комманд

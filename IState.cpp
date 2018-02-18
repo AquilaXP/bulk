@@ -20,10 +20,11 @@ void IState::AppendCmdToSubject( const std::string& cmd )
 }
 
 Context::Context( ISubject* subject, size_t N )
-    : m_subject( subject )
 {
-    m_states.emplace_back( std::make_unique<StateWaitNCmd>( subject, N ) );
-    m_states.emplace_back( std::make_unique<StateWaitEndBlock>( subject ) );
+    std::unique_ptr<IState> s1( new StateWaitNCmd( subject, N ) );
+    m_states.emplace_back( s1 );
+    std::unique_ptr<IState> s2( new StateWaitEndBlock( subject ) );
+    m_states.emplace_back( s2 );
 
     m_state = m_states[size_t( STATE_WAIT_N_CMD )].get();
 }
