@@ -74,7 +74,11 @@ void StateWaitEndBlock::Downlvl( AppenderCmd* context )
     --m_lvl;
     if( m_lvl == 0 )
     {
-        AppendCmdToSubject( m_buffer );
+        if( not m_buffer.empty() )
+        {
+            AppendCmdToSubject( m_buffer );
+            m_buffer.clear();
+        }
         ChangeState( context, context->GetState(AppenderCmd::STATE_WAIT_N_CMD) );
         m_lvl = 1; // при следующем вызове
     }
