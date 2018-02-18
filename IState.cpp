@@ -1,5 +1,6 @@
 #include "IState.h"
 
+#include <memory>
 #include <cassert>
 
 IState::IState( ISubject* subject ) 
