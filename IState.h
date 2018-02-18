@@ -34,6 +34,8 @@ public:
     };
 
     Context( ISubject* subject, size_t N );
+    Context( const Context& ) = delete;
+    Context& operator = ( const Context& ) = delete;
 
     void AppendCmd( const std::string& cmd );
     void ChangeState( IState* next_state );
