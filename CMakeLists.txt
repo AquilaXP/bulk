@@ -8,7 +8,8 @@ configure_file(version.h.in version.h @ONLY)
 
 set(SRC
     main.cpp
-    IState.cpp    
+    IState.cpp
+    ISubject.cpp
     )
 
 set(HDR
