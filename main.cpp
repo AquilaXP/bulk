@@ -12,7 +12,7 @@ class ConsoleObserver : public IObserver
 public:    
     void Update( const std::string& cmd ) override
     {
-        std::cout << cmd << std::endl;
+        std::cout << "bulk: " << cmd << std::endl;
     }
 };
 
@@ -30,7 +30,7 @@ public:
             sc::duration_cast<sc::seconds>(t.time_since_epoch()).count() << 
             ".log";
         std::ofstream f( ss.str(), std::ios::binary );
-        f << cmd;
+        f << "bulk: " << cmd;
     }
 };
 
