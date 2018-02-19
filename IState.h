@@ -6,7 +6,7 @@
 #include <vector>
 #include <memory>
 
-#include "ISubject.h"
+#include "ObserverBase.h"
 
 class AppenderCmd;
 
@@ -14,14 +14,19 @@ class AppenderCmd;
 class IState
 {
 public:
-    IState( ISubject* subject );
+    IState( ObserverBase* ob_base );
     virtual ~IState() = default;
     virtual void AppendCmd( AppenderCmd* context, const std::string& cmd ) = 0;
 protected:
     void ChangeState( AppenderCmd* context, IState* next_state );
-    void AppendCmdToSubject( const std::string& cmd );
+    void AppendPackCmd( const std::string& cmd );
+    void EventAddCmdtoBlock( const std::string& cmd, uint32_t num_cmd )
+    {
 
-    ISubject* m_subject = nullptr;
+    }
+
+    uint32_t m_num_cmd = 0;
+    ObserverBase* m_ob = nullptr;
 };
 
 /// Класс для добавления комманд.
@@ -38,7 +43,7 @@ public:
         STATE_WAIT_END_BLOCK = 1
     };
 
-    AppenderCmd( ISubject* subject, size_t N );
+    AppenderCmd( ObserverBase* ob_base, size_t N );
     AppenderCmd( const AppenderCmd& ) = delete;
     AppenderCmd& operator = ( const AppenderCmd& ) = delete;
 
@@ -54,7 +59,7 @@ private:
 class StateWaitEndBlock : public IState
 {
 public:
-    StateWaitEndBlock( ISubject* subject );
+    StateWaitEndBlock( ObserverBase* ob_base );
     void AppendCmd( AppenderCmd* context, const std::string& cmd ) override;
 private:
     void Uplvl();
@@ -69,13 +74,12 @@ private:
 class StateWaitNCmd : public IState
 {
 public:
-    StateWaitNCmd( ISubject* subject, size_t N );
+    StateWaitNCmd( ObserverBase* ob_base, size_t N );
     ~StateWaitNCmd();
     void AppendCmd( AppenderCmd* conext, const std::string& cmd ) override;
 private:
     void Flush();
 
     int32_t m_N = 0;    
-    int32_t m_curr = 0;
     std::string m_buffer;
 };

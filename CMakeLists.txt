@@ -10,12 +10,14 @@ set(SRC
     main.cpp
     IState.cpp
     ISubject.cpp
+    ObserverBase.cpp
     )
 
 set(HDR
     IState.h
     IObserver.h
     ISubject.h
+    ObserverBase.h
     )
 
 #Program bulk
