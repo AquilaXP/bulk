@@ -76,8 +76,6 @@ public:
         std::string cmd;
         while( std::getline( std::cin, cmd ) )
         {
-            if( cmd.empty() )
-                return;
             Notify( cmd );
         }
     }

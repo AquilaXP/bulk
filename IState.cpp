@@ -73,7 +73,7 @@ void StateWaitEndBlock::Downlvl( AppenderCmd* context )
     --m_lvl;
     if( m_lvl == 0 )
     {
-        if( not m_buffer.empty() )
+        if( m_num_cmd > 0 )
         {
             AppendPackCmd( m_buffer );
             m_buffer.clear();
@@ -86,7 +86,7 @@ void StateWaitEndBlock::Downlvl( AppenderCmd* context )
 
 void StateWaitEndBlock::CopyCmd( const std::string& cmd )
 {
-    if( not m_buffer.empty() )
+    if( m_num_cmd > 0 )
         m_buffer += ", ";
     m_buffer += cmd;
     m_ob->EventAddCmdToBlock( cmd, m_num_cmd );
@@ -101,7 +101,7 @@ StateWaitNCmd::StateWaitNCmd( ObserverBase* ob_base, size_t N )
 
 StateWaitNCmd::~StateWaitNCmd()
 {
-    if( not m_buffer.empty() )
+    if( m_num_cmd > 0 )
         AppendPackCmd( m_buffer );
 }
 
@@ -114,7 +114,7 @@ void StateWaitNCmd::AppendCmd( AppenderCmd* conext, const std::string& cmd )
     }
     else
     {
-        if( not m_buffer.empty() )
+        if( m_num_cmd > 0 )
             m_buffer += ", ";
         m_buffer += cmd;
         m_ob->EventAddCmdToBlock( cmd, m_num_cmd );
@@ -129,7 +129,7 @@ void StateWaitNCmd::AppendCmd( AppenderCmd* conext, const std::string& cmd )
 
 void StateWaitNCmd::Flush()
 {
-    if( m_buffer.empty() )
+    if( m_num_cmd == 0 )
         return;
 
     AppendPackCmd( m_buffer );
